@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 #from django.contrib.auth.forms import UserCreationForm
 from .forms import PlayerRegisterForm, DevRegisterForm
 
-def login(request):
-    return render(request, 'users/login.html')
 
 def register(request):
 

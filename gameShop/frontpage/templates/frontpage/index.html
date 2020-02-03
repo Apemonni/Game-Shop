@@ -1,4 +1,9 @@
+{% load static %}
 <h1>
-  {% load static %}
   <img src="{% static "frontpage/logo.png" %}" alt="My image">
+  {% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">Log out</a>
+  {% else %}
+    <a href="{% url 'login' %}">Log in</a>
+  {% endif %}
 </h1>
