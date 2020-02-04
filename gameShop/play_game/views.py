@@ -13,4 +13,4 @@ def save(request, player_id, game_id):
     return HttpResponse("Saving the game")
 
 def play(request):
-    return render(request, 'PlayingGame/playing_game.html')
+    return render(request, 'play_game/play.html')
