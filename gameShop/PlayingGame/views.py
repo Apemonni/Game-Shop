@@ -5,9 +5,11 @@ from django.views import generic
 from django.utils import timezone
 
 def load(request, player_id, game_id):
+    #Should decide where gamestate models are held that these views process?
     return HttpResponse("Loading the game")
 
 def save(request, player_id, game_id):
+    #Should decide where gamestate models are held that these views process?
     return HttpResponse("Saving the game")
 
 def play(request):
