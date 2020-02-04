@@ -1,0 +1,9 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+    <div>
+        <h2>Let's create an account! Are you a..</h2>
+        <a href="{% url 'register-player' %}">Player</a> <br>
+        <a href="{% url 'register-dev' %}">Developer</a>
+    </div>
+{% endblock content%}
