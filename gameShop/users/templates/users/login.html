@@ -1,14 +1,16 @@
-<h1>Login page</h1>
+{% extends "shop/base.html" %}
 
-<form method="POST">
-    {% csrf_token %} <!--Required to prevent cross-site request forgery-->
-    {{ form.as_p }}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %} <!--Required to prevent cross-site request forgery-->
+        {{ form.as_p }}
+        <div>
+            <button type="submit">Log In</button>
+        </div>
+    </form>
+
     <div>
-        <button type="submit">Log In</button>
+        Don't have an account yet?
+        <a href="{% url 'register' %}">Register</a>
     </div>
-</form>
-
-<div>
-    Don't have an account yet?
-    <a href="{% url 'register' %}">Register</a>
-</div>
+{% endblock content%}

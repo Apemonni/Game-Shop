@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'PlayingGame.apps.PlayinggameConfig',
-    'frontpage.apps.FrontpageConfig',
     'users.apps.UsersConfig',
+    'shop.apps.ShopConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,4 +122,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = 'frontpage-home'
+LOGIN_REDIRECT_URL = 'shop-home'
