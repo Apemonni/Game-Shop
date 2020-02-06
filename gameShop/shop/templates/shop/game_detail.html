@@ -1,0 +1,14 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+    <h2>Game info:</h2>
+
+    <div>{{ object.name }}</div>
+    <p>{{ object.description }}</p>
+    <div>{{ object.price }}</div>
+    <div>
+        <a href="{% url 'game-update' object.pk %}">Edit</a>
+        <a href="{% url 'game-delete' object.pk %}">Delete</a>
+    </div>
+
+{% endblock content%}

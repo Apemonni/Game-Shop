@@ -8,7 +8,7 @@
 
 <div class="menu">
   <a href="{% url 'shop-home' %}">HOME</a>
-  <a href="#games">GAMES</a>
+  <a href="{% url 'game-list' %}">GAMES</a>
   <a href="{% url 'highscores' %}">TOP HIGHSCORES</a>
   <div class="menu-log">
     {% if user.is_authenticated %}
