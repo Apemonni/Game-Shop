@@ -1,9 +1,25 @@
 {% extends "shop/base.html" %}
 
+
 {% block content %}
-  <div class="body">
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'shop/highscore_style.css' %}">
+{% for game in score%}
+  <div class="tab">
     <section id="content1">
-      <h2>HIGHSCORES</h2>
+        <button class="tablinks" onclick="openGame(event, {{game.game_id}}))"
+        >{{game.game_id}}</button>
     </section>
   </div>
+
+  <div class="tabcontent">
+    <h3>User {{game.user_id}} highscore: {{game.user_score}}</h3>
+  </div>
+
+
+
+
+{% endfor %}
+
 {% endblock content%}

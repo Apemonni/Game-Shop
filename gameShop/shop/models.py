@@ -23,11 +23,10 @@ class Game(models.Model):
 
 
 # This might not be needed after all
-'''
 
+# TESTING WITH THIS TABLE
 class AllHighScores(models.Model):
     user_id = models.CharField(max_length=200)
     user_score = models.PositiveIntegerField()
     game_id = models.CharField(max_length=200)
     score_date = models.DateTimeField()
-'''
