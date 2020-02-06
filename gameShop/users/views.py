@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 #from django.contrib.auth.forms import UserCreationForm
-from .forms import PlayerRegisterForm, DevRegisterForm
+from .forms import UserRegisterForm#PlayerRegisterForm, DevRegisterForm
 
 
 def register(request):
@@ -9,12 +9,12 @@ def register(request):
 
 def registerPlayer(request):
     if request.method == 'POST':
-        form = PlayerRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('login')
     else:
-        form = PlayerRegisterForm()
+        form = UserRegisterForm()
 
     return render(request, 'users/register.html', { 'form':form })
 
@@ -22,11 +22,11 @@ def registerPlayer(request):
 def registerDev(request):
 #TODO: change to use dev details
     if request.method == 'POST':
-        form = PlayerRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('login')
     else:
-        form = PlayerRegisterForm()
+        form = UserRegisterForm()
 
     return render(request, 'users/register.html', { 'form':form })

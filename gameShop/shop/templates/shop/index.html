@@ -3,7 +3,12 @@
 {% block content %}
   <div class="body">
     <section id="content1">
-      <h2>SOMETHING HERE</h2>
+      {% if user.is_authenticated %}
+        <div>You are signed in</div>
+      {% else %}
+        <div>You are not signed in</div>
+      {% endif %}
+      <br> <h2>SOMETHING HERE</h2>
     </section>
   </div>
 {% endblock content %}
