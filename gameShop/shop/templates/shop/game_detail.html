@@ -9,6 +9,7 @@
     <div>
         <a href="{% url 'game-update' object.pk %}">Edit</a>
         <a href="{% url 'game-delete' object.pk %}">Delete</a>
+        <a href="{% url 'play-game' object.pk %}">Play</a>
     </div>
 
 {% endblock content%}
