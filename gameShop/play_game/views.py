@@ -12,10 +12,13 @@ def load(request, player_id, game_id):
     #Should decide where gamestate models are held that these views process?
     return HttpResponse("Loading the game")
 
-def save(request, player_id, game_id):
+def save(request):
+    return HttpResponse("Loading the game")
+
     #Should decide where gamestate models are held that these views process?
-    return HttpResponse("Saving the game")
+
 
 def play(request, game_id):
     game = Game.objects.get(pk=game_id)
-    return render(request, 'play_game/play.html', {'game': game})
+    user = request.user
+    return render(request, 'play_game/play.html', {'game': game}, {'user': user})
