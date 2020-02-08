@@ -3,6 +3,10 @@ from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Game
 from play_game.models import GamePurchase, GameData
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from users.models import Profile
+#from play_game import GamePurchase
+
 
 def home(request):
     return render(request, 'shop/index.html')
@@ -18,7 +22,7 @@ class GameDetailView(DetailView):
     model = Game
 
 
-class GameCreateView(CreateView):
+class GameCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Game
     fields = ['name', 'description', 'price', 'source']
 
@@ -26,8 +30,11 @@ class GameCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def test_func(self):
+        return self.request.user.profile.is_dev == True
 
-class GameUpdateView(UpdateView):
+
+class GameUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Game
     fields = ['name', 'description', 'price', 'source']
 
@@ -35,10 +42,22 @@ class GameUpdateView(UpdateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def test_func(self):
+        is_dev = self.request.user.profile.is_dev
+        is_owner = self.get_object().author == self.request.user
+        return is_dev and is_owner
 
-class GameDeleteView(DeleteView):
+
+class GameDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Game
     success_url = '/home'
+
+    def test_func(self):
+        is_dev = self.request.user.profile.is_dev
+        is_owner = self.get_object().author == self.request.user
+        return is_dev and is_owner
+
+
 
 def highscores(request):
     score = GameData.objects.order_by('highscore')[::-1]

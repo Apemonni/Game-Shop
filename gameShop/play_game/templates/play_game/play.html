@@ -1,10 +1,45 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
+  <script>
+  /* global $ */
+  $(document).ready(function() {
+    'use strict';
+    $(window).on('message', function(evt) {
+      //Note that messages from all origins are accepted
+
+      //Get data from sent message
+      var data = JSON.parse(JSON.stringify(evt.originalEvent.data));
+      //Create a new list item based on the data
+      if (data.score != undefined)
+      {
+        if (data.messageType == "SAVE"){
+          $.ajax({
+            url: "{% url 'save' %}"
+            data: {
+              'save_message': data
+            },
+            dataType: 'json',
+
+          }
+
+          )
+        }
+        var newItem = '\n\t<li>' + (data.score) + '</li>';
+        //Add the item to the beginning of the actions list
+        $('#actions').prepend(newItem);
+      }
+    });
+  });
+  </script>
+
   <div class="body">
     <section id="content1">
       <h2>PLAY VIEW</h2>
       <p>{{ game.name }}</p>
     </section>
+    <iframe id="encoder_iframe" src= "{{ game.source }}" width = 900px height = 300px></iframe>
+    <ul id="actions">
+    </ul>
   </div>
 {% endblock content %}
