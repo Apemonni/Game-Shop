@@ -22,9 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
-    path('register/', users_views.register, name='register'),
-    path('register/player', users_views.registerPlayer, name='register-player'),
-    path('register/developer', users_views.registerDev, name='register-dev'),
+    path('register/', users_views.pre_register, name='pre-register'),
+    path('register/<user_type>', users_views.register, name='register'),
+    #path('register/developer', users_views.registerDev, name='register-dev'),
     path('play/', include('play_game.urls')),
     path('', include('shop.urls')),
 ]

@@ -4,7 +4,12 @@
     <h2>Games list:</h2>
 
     {% for game in object_list %}
-        <div>{{ game.name }} <a href="{% url 'game-detail' game.pk %}">View</a></div>
+        <div>
+            {{ game.name }}
+            <a href="{% url 'game-detail' game.pk %}">View</a>
+            by: {{ game.author.username }}
+            <a href="{% url 'play-game' game.pk %}">Play</a>
+        </div>
     {% endfor %}
 
     <a href="{% url 'game-create' %}">Add a new game</a>
