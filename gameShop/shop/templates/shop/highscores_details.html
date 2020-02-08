@@ -2,24 +2,49 @@
 
 
 {% block content %}
+<body>
 
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'shop/highscore_style.css' %}">
-{% for game in score%}
+
   <div class="tab">
-    <section id="content1">
-        <button class="tablinks" onclick="openGame(event, {{game.game_id}}))"
-        >{{game.game_id}}</button>
-    </section>
+    {% for game in games%}
+    <button class="tablinks" onclick="openGame(event, '{{game.name}}')" id="defaultOpen">
+      {{game.name}}</button>
+    {% endfor %}
   </div>
 
-  <div class="tabcontent">
-    <h3>User {{game.user_id}} highscore: {{game.user_score}}</h3>
+{% for game in games%}
+  <div id={{game.name}} class="tabcontent">
+    <ol>
+        {% for scores in score %}
+
+          {% if game.name == scores.game_purchase.game.name %}
+
+        <li> User: {{scores.game_purchase.user}} highscore: {{scores.highscore}}</li>
+        {% endif %}
+
+    {% endfor %}
+    </ol>
   </div>
-
-
-
-
 {% endfor %}
 
+
+<script type="text/javascript">
+function openGame(evt, gameName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(gameName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+</body>
 {% endblock content%}

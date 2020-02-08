@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Game, AllHighScores
-#from play_game import GamePurchase
+from .models import Game
+from play_game.models import GamePurchase, GameData
 
 def home(request):
     return render(request, 'shop/index.html')
@@ -41,6 +41,7 @@ class GameDeleteView(DeleteView):
     success_url = '/home'
 
 def highscores(request):
-    #score = get_object_or_404(AllHighScores)
-    score = AllHighScores.objects.all() # USING AllHighScores JUST FOR TESTING
-    return render(request, 'shop/highscores_details.html', {'score': score})
+    score = GameData.objects.order_by('highscore')[::-1]
+    games = Game.objects.all()
+    return render(request, 'shop/highscores_details.html', {'score': score,
+     'games':games)
