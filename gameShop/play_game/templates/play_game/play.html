@@ -15,7 +15,7 @@
       {
         if (data.messageType == "SAVE"){
           $.ajax({
-            url: "{% url 'save' %}"
+            url: "{% url 'save' game.pk %}",
             data: {
               'save_message': data
             },
