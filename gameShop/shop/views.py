@@ -97,7 +97,7 @@ def buy(request, game_id):
     amount = game.price
     success_url = request.build_absolute_uri(reverse('buy-success', kwargs={'game_id': game_id}))
     cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id})) # 'http://localhost:8000/'
-    error_url = 'http://localhost:8000/'
+    error_url = request.build_absolute_uri(reverse('buy-error'))
     secret = dev_info.secret_key
     checksumstr = f"pid={pid:s}&sid={sid:s}&amount={amount:.2f}&token={secret:s}"
     checksum = md5(checksumstr.encode('utf-8')).hexdigest()
@@ -114,10 +114,28 @@ def buy(request, game_id):
     #GamePurchase.objects.create(game=game, user=user, purchase_price=game.price)
     #return render(request, 'shop/buy_success.html')
 
-# TODO: Verify payment and add game to purchases
+
 def buy_success(request, game_id):
     game = Game.objects.get(pk=game_id)
-    return render(request, 'shop/buy_success.html', {'game': game})
+    pid = request.GET.get('pid', None)
+    ref = request.GET.get('ref', None)
+    result = request.GET.get('result', None)
+    secret = DevProfile.objects.get(user=game.author).secret_key
+    checksum = request.GET.get('checksum', None)
+
+    checksumstr = f"pid={pid:s}&ref={ref:s}&result={result:s}&token={secret:s}"
+    expected_checksum = md5(checksumstr.encode('utf-8')).hexdigest()
+
+    if checksum == expected_checksum:
+        user = request.user
+        GamePurchase.objects.create(user=user, game=game, purchase_price=game.price)
+        return render(request, 'shop/buy_success.html', {'game': game})
+    
+    return redirect('buy-error')
+    
+
+def buy_error(request):
+    return render(request, 'shop/buy_error.html')
 
 
 def highscores(request):
