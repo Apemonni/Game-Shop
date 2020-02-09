@@ -20,5 +20,7 @@ def save(request):
 
 def play(request, game_id):
     game = Game.objects.get(pk=game_id)
+    game.times_played += 1
+    game.save()
     user = request.user
     return render(request, 'play_game/play.html', {'game': game}, {'user': user})

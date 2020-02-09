@@ -10,6 +10,7 @@ class Game(models.Model):
     price = models.PositiveIntegerField()
     source = models.URLField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='games')
+    times_played = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name

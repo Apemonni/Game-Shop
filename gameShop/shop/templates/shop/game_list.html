@@ -8,7 +8,6 @@
             {{ game.name }}
             <a href="{% url 'game-detail' game.pk %}">View</a>
             by: {{ game.author.username }}
-            <a href="{% url 'play-game' game.pk %}">Play</a>
         </div>
     {% endfor %}
 
