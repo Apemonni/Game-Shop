@@ -11,6 +11,7 @@ class GamePurchase(models.Model):
     purchase_price = models.PositiveSmallIntegerField()
 
 class GameData(models.Model):
-    game_purchase = models.OneToOneField(GamePurchase, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     highscore = models.PositiveIntegerField()
     save_data = models.TextField()

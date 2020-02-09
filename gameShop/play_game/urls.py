@@ -7,5 +7,5 @@ from . import views
 urlpatterns = [
 path('<int:game_id>/', views.play, name='play-game'),
 path('<load/', views.load, name='load'),
-path('<save/', views.save, name='save'),
+path('save/<int:game_id>/', views.save, name='save'),
 ]
