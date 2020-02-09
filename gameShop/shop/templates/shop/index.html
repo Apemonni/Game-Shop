@@ -4,7 +4,7 @@
   <div class="body">
     <section id="content1">
       {% if user.is_authenticated %}
-        <div>You are signed in</div>
+        <div>You are signed in as {{ user.username }}</div>
       {% else %}
         <div>You are not signed in</div>
       {% endif %}

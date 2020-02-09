@@ -9,6 +9,11 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+
+class DevRegisterForm(UserRegisterForm):
+    seller_id = forms.CharField(max_length=255)
+    secret_key = forms.CharField(max_length=255)
+
 '''
 class PlayerRegisterForm(UserRegisterForm):
     nickName = forms.CharField()

@@ -10,6 +10,7 @@ class Game(models.Model):
     price = models.PositiveIntegerField()
     source = models.URLField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='games')
+    times_played = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -20,13 +21,3 @@ class Game(models.Model):
 
 
     # TODO: Make fields visible on admin page
-
-
-# This might not be needed after all
-
-# TESTING WITH THIS TABLE
-class AllHighScores(models.Model):
-    user_id = models.CharField(max_length=200)
-    user_score = models.PositiveIntegerField()
-    game_id = models.CharField(max_length=200)
-    score_date = models.DateTimeField()

@@ -9,6 +9,15 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_dev = models.BooleanField(default=False)
 
+    def __str__(self):
+        role = 'developer' if self.is_dev else 'player'
+        return self.user.username + "'s profile (" + role + ")"
+
+
+class DevProfile(Profile):
+    seller_id = models.CharField(max_length=255)
+    secret_key = models.CharField(max_length=255)
+
 
 #Using multi-table inheritance to store additional user data if needed
 #class PlayerProfile(Profile):
