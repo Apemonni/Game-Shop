@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # Models
 from .models import Game #, AllHighScores
 from users.models import Profile
-from play_game.models import GamePurchase
+from play_game.models import GamePurchase, GameData
 
 
 def home(request):
