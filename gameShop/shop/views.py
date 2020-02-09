@@ -8,9 +8,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #from django.contrib.auth.decorators import login_required
 
 # Models
-from .models import Game, AllHighScores
+from .models import Game #, AllHighScores
 from users.models import Profile
 from play_game.models import GamePurchase
+
 
 def home(request):
     return render(request, 'shop/index.html')
@@ -87,6 +88,6 @@ def buy(request, game_id):
     return render(request, 'shop/buy_success.html')
 
 def highscores(request):
-    #score = get_object_or_404(AllHighScores)
-    score = AllHighScores.objects.all() # USING AllHighScores JUST FOR TESTING
-    return render(request, 'shop/highscores_details.html', {'score': score})
+    score = GameData.objects.order_by('highscore')[::-1]
+    games = Game.objects.all()
+    return render(request, 'shop/highscores_details.html', {'score': score, 'games':games})
