@@ -1,15 +1,15 @@
 # Django
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 # Use for restricting access on class-based views
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # Use for restricting access on method-based views
-#from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 
 # Models
 from .models import Game #, AllHighScores
-from users.models import Profile
+from users.models import Profile, DevProfile
 from play_game.models import GamePurchase, GameData
 
 
@@ -30,7 +30,7 @@ class GameDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         game = self.get_object()
         user = self.request.user
-        is_purchased = GamePurchase.objects.filter(user=user, game=game).first() != None
+        is_purchased = user.is_authenticated and GamePurchase.objects.filter(user=user, game=game).first() != None
         times_purchased = len(GamePurchase.objects.filter(game=game))
         context['game_purchased'] = is_purchased
         context['times_purchased'] = times_purchased
@@ -75,17 +75,50 @@ class GameDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return is_dev and is_owner
 
 
+@login_required
 def buy_confirm(request, game_id):
     game = Game.objects.get(pk=game_id)
+    if GamePurchase.objects.filter(user=request.user, game=game).first() != None or game.author == request.user:
+        return redirect('game-detail', game_id)
+        
     return render(request, 'shop/buy_game.html', {'game': game})
 
-
+from hashlib import md5
+from urllib.parse import urlencode
+import time
 
 def buy(request, game_id):
     user = request.user
     game = Game.objects.get(pk=game_id)
-    GamePurchase.objects.create(game=game, user=user, purchase_price=game.price)
-    return render(request, 'shop/buy_success.html')
+    dev_info = DevProfile.objects.get(user=game.author)
+
+    pid = str(game.pk) + str(user.pk) + '_' + str(time.time())
+    sid = dev_info.seller_id
+    amount = game.price
+    success_url = request.build_absolute_uri(reverse('buy-success', kwargs={'game_id': game_id}))
+    cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id})) # 'http://localhost:8000/'
+    error_url = 'http://localhost:8000/'
+    secret = dev_info.secret_key
+    checksumstr = f"pid={pid:s}&sid={sid:s}&amount={amount:.2f}&token={secret:s}"
+    checksum = md5(checksumstr.encode('utf-8')).hexdigest()
+
+    bankapi = 'https://tilkkutakki.cs.aalto.fi/payments/pay'
+    query = urlencode({
+    'pid': pid, 'sid': sid, 'amount': f'{amount:.2f}',
+    'checksum': checksum,
+    'success_url': success_url,
+    'cancel_url': cancel_url,
+    'error_url': error_url})
+    return redirect(bankapi + '?' + query)
+
+    #GamePurchase.objects.create(game=game, user=user, purchase_price=game.price)
+    #return render(request, 'shop/buy_success.html')
+
+# TODO: Verify payment and add game to purchases
+def buy_success(request, game_id):
+    game = Game.objects.get(pk=game_id)
+    return render(request, 'shop/buy_success.html', {'game': game})
+
 
 def highscores(request):
     score = GameData.objects.order_by('highscore')[::-1]

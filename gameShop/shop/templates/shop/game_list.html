@@ -11,6 +11,8 @@
         </div>
     {% endfor %}
 
-    <a href="{% url 'game-create' %}">Add a new game</a>
+    {% if user.is_authenticated and user.profile.is_dev %}
+        <a href="{% url 'game-create' %}">Add a new game</a>
+    {% endif %}
 
 {% endblock content %}
