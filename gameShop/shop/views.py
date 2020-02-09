@@ -99,12 +99,13 @@ def buy(request, game_id):
     cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id})) # 'http://localhost:8000/'
     error_url = request.build_absolute_uri(reverse('buy-error'))
     secret = dev_info.secret_key
-    checksumstr = f"pid={pid:s}&sid={sid:s}&amount={amount:.2f}&token={secret:s}"
+    #checksumstr = f"pid={pid:s}&sid={sid:s}&amount={amount:.2f}&token={secret:s}"
+    checksumstr = "pid={:s}&sid={:s}&amount={:.2f}&token={:s}".format(pid, sid, amount, secret)
     checksum = md5(checksumstr.encode('utf-8')).hexdigest()
 
     bankapi = 'https://tilkkutakki.cs.aalto.fi/payments/pay'
     query = urlencode({
-    'pid': pid, 'sid': sid, 'amount': f'{amount:.2f}',
+    'pid': pid, 'sid': sid, 'amount': "{:.2f}".format(amount), # f'{amount:.2f}',
     'checksum': checksum,
     'success_url': success_url,
     'cancel_url': cancel_url,
@@ -123,7 +124,8 @@ def buy_success(request, game_id):
     secret = DevProfile.objects.get(user=game.author).secret_key
     checksum = request.GET.get('checksum', None)
 
-    checksumstr = f"pid={pid:s}&ref={ref:s}&result={result:s}&token={secret:s}"
+    #checksumstr = f"pid={pid:s}&ref={ref:s}&result={result:s}&token={secret:s}"
+    checksumstr = "pid={:s}&ref={:s}&result={:s}&token={:s}".format(pid, ref, result, secret)
     expected_checksum = md5(checksumstr.encode('utf-8')).hexdigest()
 
     if checksum == expected_checksum:
