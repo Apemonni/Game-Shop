@@ -17,10 +17,10 @@
     <ol>
         {% for scores in score %}
 
-          {% if game.name == scores.game_purchase.game.name %}
+          {% if game.name == scores.game.name %}
 
-        <li> User: {{scores.game_purchase.user}} highscore: {{scores.highscore}}</li>
-        {% endif %}
+            <li> User: {{scores.game_purchase.user.username}} highscore: {{scores.highscore}}</li>
+          {% endif %}
 
     {% endfor %}
     </ol>
