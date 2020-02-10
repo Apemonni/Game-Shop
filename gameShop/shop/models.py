@@ -21,3 +21,13 @@ class Game(models.Model):
 
 
     # TODO: Make fields visible on admin page
+
+
+class GamePurchase(models.Model):
+    # In order to prevent reuse of payments, don't cascade on delete to retain payment info 
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='purchases')
+    game = models.ForeignKey(Game, null=True, on_delete=models.SET_NULL, related_name='purchases')
+    purchase_date = models.DateTimeField(default=timezone.now)
+    purchase_price = models.PositiveSmallIntegerField()
+    purchase_id = models.CharField(max_length=64, unique=True)
+    purchase_ref = models.CharField(max_length=64, unique=True)

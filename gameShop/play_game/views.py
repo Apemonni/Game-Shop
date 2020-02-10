@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 
 from shop.models import Game
-from .models import GameData, GamePurchase
+from .models import GameData
 
 
 def load(request, player_id, game_id):

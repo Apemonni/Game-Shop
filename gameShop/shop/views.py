@@ -8,9 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 
 # Models
-from .models import Game #, AllHighScores
+from .models import Game, GamePurchase #, AllHighScores
 from users.models import Profile, DevProfile
-from play_game.models import GamePurchase, GameData
+from play_game.models import GameData
 
 
 def home(request):
@@ -83,9 +83,11 @@ def buy_confirm(request, game_id):
         
     return render(request, 'shop/buy_game.html', {'game': game})
 
+# TODO: move imports to top
 from hashlib import md5
 from urllib.parse import urlencode
 import time
+
 
 def buy(request, game_id):
     user = request.user
@@ -99,6 +101,7 @@ def buy(request, game_id):
     cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id})) # 'http://localhost:8000/'
     error_url = request.build_absolute_uri(reverse('buy-error'))
     secret = dev_info.secret_key
+    # use older style string formatting for compatibility with Python version < 3.6
     #checksumstr = f"pid={pid:s}&sid={sid:s}&amount={amount:.2f}&token={secret:s}"
     checksumstr = "pid={:s}&sid={:s}&amount={:.2f}&token={:s}".format(pid, sid, amount, secret)
     checksum = md5(checksumstr.encode('utf-8')).hexdigest()
@@ -112,8 +115,6 @@ def buy(request, game_id):
     'error_url': error_url})
     return redirect(bankapi + '?' + query)
 
-    #GamePurchase.objects.create(game=game, user=user, purchase_price=game.price)
-    #return render(request, 'shop/buy_success.html')
 
 
 def buy_success(request, game_id):
@@ -124,14 +125,18 @@ def buy_success(request, game_id):
     secret = DevProfile.objects.get(user=game.author).secret_key
     checksum = request.GET.get('checksum', None)
 
+    # use older style string formatting for compatibility with Python version < 3.6
     #checksumstr = f"pid={pid:s}&ref={ref:s}&result={result:s}&token={secret:s}"
     checksumstr = "pid={:s}&ref={:s}&result={:s}&token={:s}".format(pid, ref, result, secret)
     expected_checksum = md5(checksumstr.encode('utf-8')).hexdigest()
 
     if checksum == expected_checksum:
-        user = request.user
-        GamePurchase.objects.create(user=user, game=game, purchase_price=game.price)
-        return render(request, 'shop/buy_success.html', {'game': game})
+        try:
+            user = request.user
+            GamePurchase.objects.create(user=user, game=game, purchase_price=game.price, purchase_id=pid, purchase_ref=ref)
+            return render(request, 'shop/buy_success.html', {'game': game})
+        except Exception:
+            pass
     
     return redirect('buy-error')
     
