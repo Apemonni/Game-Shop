@@ -88,7 +88,7 @@ from hashlib import md5
 from urllib.parse import urlencode
 import time
 
-
+@login_required
 def buy(request, game_id):
     user = request.user
     game = Game.objects.get(pk=game_id)
@@ -97,7 +97,7 @@ def buy(request, game_id):
     pid = str(game.pk) + str(user.pk) + '_' + str(time.time())
     sid = dev_info.seller_id
     amount = game.price
-    success_url = request.build_absolute_uri(reverse('buy-success', kwargs={'game_id': game_id}))
+    success_url = request.build_absolute_uri(reverse('buy-success', kwargs={'user_id': user.pk, 'game_id': game_id}))
     cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id})) # 'http://localhost:8000/'
     error_url = request.build_absolute_uri(reverse('buy-error'))
     secret = dev_info.secret_key
@@ -116,8 +116,8 @@ def buy(request, game_id):
     return redirect(bankapi + '?' + query)
 
 
-
-def buy_success(request, game_id):
+@login_required
+def buy_success(request, user_id, game_id):
     game = Game.objects.get(pk=game_id)
     pid = request.GET.get('pid', None)
     ref = request.GET.get('ref', None)
@@ -132,9 +132,15 @@ def buy_success(request, game_id):
 
     if checksum == expected_checksum:
         try:
-            user = request.user
+            '''
+            Check that current user is the same who initiated purchase.
+            If user id's do not match, show error but save payment info
+            anyway to enable recovery of payments later.
+            '''
+            user = request.user if request.user.pk == user_id else None
             GamePurchase.objects.create(user=user, game=game, purchase_price=game.price, purchase_id=pid, purchase_ref=ref)
-            return render(request, 'shop/buy_success.html', {'game': game})
+            if user != None:
+                return render(request, 'shop/buy_success.html', {'game': game})
         except Exception:
             pass
     
