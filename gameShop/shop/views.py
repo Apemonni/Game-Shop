@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 
 # Models
-from .models import Game, GamePurchase #, AllHighScores
+from .models import Game, GamePurchase
 from users.models import Profile, DevProfile
 from play_game.models import GameData
 
@@ -36,7 +36,7 @@ class GameDetailView(DetailView):
         context['times_purchased'] = times_purchased
 
         return context
-        
+
 
 
 class GameCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -80,7 +80,7 @@ def buy_confirm(request, game_id):
     game = Game.objects.get(pk=game_id)
     if GamePurchase.objects.filter(user=request.user, game=game).first() != None or game.author == request.user:
         return redirect('game-detail', game_id)
-        
+
     return render(request, 'shop/buy_game.html', {'game': game})
 
 # TODO: move imports to top
@@ -143,9 +143,9 @@ def buy_success(request, user_id, game_id):
                 return render(request, 'shop/buy_success.html', {'game': game})
         except Exception:
             pass
-    
+
     return redirect('buy-error')
-    
+
 
 def buy_error(request):
     return render(request, 'shop/buy_error.html')

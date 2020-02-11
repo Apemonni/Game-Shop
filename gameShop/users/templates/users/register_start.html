@@ -1,9 +1,27 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
-    <div>
-        <h2>Let's create an account! Are you a..</h2>
-        <a href="{% url 'register' 'player' %}">Player</a> <br>
-        <a href="{% url 'register' 'developer' %}">Developer</a>
-    </div>
+
+<style>
+  .bordered {
+    width: 500px;
+    height: 500px;
+    padding: 20px;
+    background-color: tomato;
+  }
+
+  a.bordered {
+    font-weight: bold;
+    color: white;
+    text-align: justify;
+    font-size:35px;
+  }
+
+</style>
+
+<div align="center">
+    <h2>Let's create an account! Are you a..</h2> <br><br><br><br><br>
+    <a class="bordered" href="{% url 'register' 'player' %}" >PLAYER</a><br><br><br><br><br><br>
+    <a class="bordered" href="{% url 'register' 'developer' %}">DEVELOPER</a>
+</div>
 {% endblock content%}
