@@ -21,10 +21,12 @@
           $.ajax({
             url: "{% url 'save' game.pk %}",
             data: {
-              'save_message': data
+              'save_message': data,
+              'highscore': data.gameState.score
             },
-            success: function () {
-                alert("Gamestate saved.");
+            dataType: 'json',
+            success: function (data) {
+                alert(data.saved);
           }
 
         });

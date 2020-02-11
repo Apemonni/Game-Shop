@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
+from django.http import JsonResponse
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -15,9 +16,14 @@ def load(request, player_id, game_id):
 
 def save(request, game_id):
     game = Game.objects.get(pk=game_id)
-    a = GameData(user = request.user, game = game, highscore = 0, save_data = str(request.GET))
+    data = request.GET.get('save_message')
+    highscore1 = request.GET.get('highscore')
+    a = GameData(user = request.user, game = game, highscore = highscore1, save_data = str(request.GET))
     a.save()
-    return HttpResponseRedirect(reverse('play-game', args=(game.id,)))
+    data = {
+        'saved': 'Gamestate saved'
+    }
+    return JsonResponse(data)
 
     #Should decide where gamestate models are held that these views process?
 
