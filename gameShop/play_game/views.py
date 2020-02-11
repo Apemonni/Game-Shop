@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from django.urls import reverse
@@ -18,14 +18,24 @@ def save(request, game_id):
     game = Game.objects.get(pk=game_id)
     data = request.GET.get('save_message')
     highscore1 = request.GET.get('highscore')
-    a = GameData(user = request.user, game = game, highscore = highscore1, save_data = str(request.GET))
-    a.save()
-    data = {
-        'saved': 'Gamestate saved'
-    }
-    return JsonResponse(data)
+    if GameData.objects.filter( user = request.user, game = game).exists():
+        object1 = GameData.objects.get(user = request.user, game = game)
+        if object1.highscore < int(highscore1): #only modify highscore if it is higher than old highscore
+            object1.highscore = highscore1
+            object1.save()
+        data = {
+            'saved': 'Gamestate saved'
+        }
+        return JsonResponse(data)
 
-    #Should decide where gamestate models are held that these views process?
+    else:
+        a = GameData(user = request.user, game = game, highscore = highscore1, save_data = str(request.GET))
+        a.save()
+        data = {
+            'saved': 'Gamestate saved'
+        }
+        return JsonResponse(data)
+
 
 @login_required
 def play(request, game_id):

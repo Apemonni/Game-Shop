@@ -22,7 +22,8 @@
             url: "{% url 'save' game.pk %}",
             data: {
               'save_message': data,
-              'highscore': data.gameState.score
+              'highscore': data.gameState.score,
+              'items': data.gameState.playerItems
             },
             dataType: 'json',
             success: function (data) {
@@ -31,6 +32,7 @@
 
         });
         }
+
         var newItem = '\n\t<li>' + (data.gameState.score) + '</li>';
         //Add the item to the beginning of the actions list
         $('#actions').prepend(newItem);
