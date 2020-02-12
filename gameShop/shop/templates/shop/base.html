@@ -17,6 +17,7 @@
     {% if user.is_authenticated %}
       <a href="{% url 'logout' %}">LOG OUT</a>
     {% else %}
+      <a href="{% url 'pre-register' %}">SIGN UP</a>
       <a href="{% url 'login' %}">LOG IN</a>
     {% endif %}
   </div>

@@ -11,10 +11,10 @@ $(document).ready(function() {
     if (data.messageType == "SAVE"){
       $.ajax({
         url: game_iframe.getAttribute("save_url"),
+        dataType: 'json',
         data: {
           'game_state': JSON.stringify(data.gameState)
-        },
-        dataType: 'json'
+        }
     });
     }
     else if (data.messageType == "LOAD_REQUEST"){
@@ -22,7 +22,7 @@ $(document).ready(function() {
         url: game_iframe.getAttribute("load_url"),
         dataType: 'json',
         success: function (data) {
-          // A responser with LOAD and game state OR ERROR and info message is returned after load request
+          // A response with LOAD and game state OR ERROR and info message is returned after load request
           if(data.messageType == "LOAD") {
             data.gameState = JSON.parse(data.gameState) // Convert gameState back to json format
           }
@@ -33,10 +33,10 @@ $(document).ready(function() {
     else if(data.messageType == "SCORE"){
       $.ajax({
         url: game_iframe.getAttribute("score_url"),
+        dataType: 'json',
         data: {
           'score': data.score
-        },
-        dataType: 'json'
+        }
       })
     }
     else if(data.messageType == "SETTING") {

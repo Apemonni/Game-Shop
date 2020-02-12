@@ -1,4 +1,7 @@
-<div>
-    You have successfully logged out.
-    <a href="{% url 'shop-home' %}">Home</a>
-</div>
+{% extends "shop/base.html" %}
+
+{% block content %}
+    <div>
+        You have been successfully logged out.
+    </div>
+{% endblock content%}
