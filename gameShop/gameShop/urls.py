@@ -25,5 +25,6 @@ urlpatterns = [
     path('register/', users_views.pre_register, name='pre-register'),
     path('register/<user_type>', users_views.register, name='register'),
     path('play/', include('play_game.urls')),
+    path('activate/', include('users.urls')),
     path('', include('shop.urls')),
 ]
