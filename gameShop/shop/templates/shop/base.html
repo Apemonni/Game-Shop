@@ -1,9 +1,21 @@
 {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'shop/base_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'shop/highscores_style.css' %}">
+
+    <title>Most Awesome Games</title>
+</head>
 
 
-<link rel="stylesheet" type="text/css" href="{% static 'shop/base_style.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'shop/highscores_style.css' %}">
 
+<body>
 
 <header>
   <div id="logo">MOST AWESOME GAMES</div>
@@ -12,7 +24,7 @@
 <div class="menu">
   <a href="{% url 'shop-home' %}">HOME</a>
   <a href="{% url 'game-list' %}">GAMES</a>
-  <a href="{% url 'highscores' %}">TOP HIGHSCORES</a>
+  <a href="{% url 'highscores' %}">HIGHSCORES</a>
   <div class="menu-log">
     {% if user.is_authenticated %}
       <a href="{% url 'logout' %}">LOG OUT</a>
@@ -25,3 +37,5 @@
 
 {% block content %}{% endblock %}
 {% block scripts %}{% endblock %}
+
+</body>

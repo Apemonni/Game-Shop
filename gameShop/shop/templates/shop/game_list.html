@@ -8,9 +8,16 @@
     padding-left: 40px;
   }
 
+  li {
+      width: 300px;
+      border: 1px solid #000;
+      margin: 10px;
+      padding: 5px;
+  }
+
   .gameList {
     padding-left: 55px;
-    border: 10px;
+    list-style-type: none;
   }
 
   
@@ -22,9 +29,14 @@
 <ul class="gameList">
 {% for game in object_list %}
     <li class="game">
-        <h3>{{ game.name }}  By: {{ game.author.username }}<h3> <br>
-        <a href="{% url 'game-detail' game.pk %}">Play this game</a> <br>
-    </li><br>
+        <h2>{{ game.name }}</h2>
+        <h5>By: {{ game.author.username }}</h5>
+        <h4>Price: {{ game.price }}€</h4>
+        <a href="{% url 'game-detail' game.pk %}">Details</a>
+        {% if game in owned_games %}
+            <a href="{% url 'play-game' game.pk %}">Play</a>
+        {% endif %}
+    </li>
 {% endfor %}
 </ul>
 

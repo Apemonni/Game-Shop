@@ -3,8 +3,8 @@
 
 {% block content %}
   <section id="game_header">
-    <h2>PLAY VIEW</h2>
-    <p>{{ game.name }}</p>
+    <h5>Now playing:</h5>
+    <h1>{{ game.name }}</h1>
   </section>
   <iframe id="game_iframe" src= '{{ game.source }}' width = 500px height = 500px
     save_url="{% url 'save' game.pk %}"

@@ -27,6 +27,14 @@ class GameListView(ListView):
     #context_object_name = 'games' # name used in the template, default is 'object'
     #ordering = ['name'] # attribute(s) to order by, prepend with '-'sign to reverse
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists() or game.author == user]
+        context['owned_games'] = owned_games
+
+        return context
+
 
 class GameDetailView(DetailView):
     model = Game
