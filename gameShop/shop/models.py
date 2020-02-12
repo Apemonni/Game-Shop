@@ -34,4 +34,5 @@ class GamePurchase(models.Model):
 
     def __str__(self):
         username = self.user.username if self.user != None else "USER_UNDEFINED"
-        return self.game.name + " by, " + username
+        game_name = self.game.name if self.game != None else "DELETED_GAME"
+        return game_name + " by, " + username
