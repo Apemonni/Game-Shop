@@ -48,9 +48,7 @@
       else if(data.messageType == "SETTING") {
         //alert("received setting call: " + data.options.width + ", " + data.options.height)
         $("#game_iframe")[0].setAttribute("width", data.options.width)
-        //document.getElementById("game_iframe").setAttribute("width", data.options.width)
         $("#game_iframe")[0].setAttribute("height", data.options.height)
-        //document.getElementById("game_iframe").height() = data.options.height
       }
     });
   });
