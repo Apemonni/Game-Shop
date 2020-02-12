@@ -1,0 +1,8 @@
+{% extends "shop/game_list.html" %}
+
+{% block extrainfo %}
+    <h3>Name: {{ user.username }}</h3>
+    <h3>Email: {{ user.email }}</h3>
+
+    <h2>Inventory:</h2>
+{% endblock extrainfo %}

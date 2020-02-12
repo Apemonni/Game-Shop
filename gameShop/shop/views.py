@@ -24,7 +24,7 @@ def home(request):
 class GameListView(ListView):
     model = Game
     #template_name = '' # use if different than game_list.html
-    #context_object_name = 'games' # name used in the template, default is 'object'
+    #context_object_name = 'games' # name used in the template, default is 'object[_list]'
     #ordering = ['name'] # attribute(s) to order by, prepend with '-'sign to reverse
 
     def get_context_data(self, *args, **kwargs):
@@ -34,6 +34,16 @@ class GameListView(ListView):
         context['owned_games'] = owned_games
 
         return context
+
+
+class MyProfileView(LoginRequiredMixin, GameListView):
+    template_name = "shop/profile.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists() or game.author == user]
+
+        return owned_games
 
 
 class GameDetailView(DetailView):
