@@ -7,5 +7,5 @@ from shop.models import Game
 class GameData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    highscore = models.PositiveIntegerField()
-    save_data = models.TextField()
+    highscore = models.PositiveIntegerField(default=0)
+    save_data = models.TextField(null=True)

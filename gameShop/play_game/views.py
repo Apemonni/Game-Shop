@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from django.urls import reverse
@@ -10,31 +10,44 @@ from shop.models import Game, GamePurchase
 from .models import GameData
 
 
-def load(request, player_id, game_id):
-    #Should decide where gamestate models are held that these views process?
-    return HttpResponse("Loading the game")
-
 def save(request, game_id):
-    game = Game.objects.get(pk=game_id)
-    data = request.GET.get('save_message')
-    highscore1 = request.GET.get('highscore')
-    if GameData.objects.filter( user = request.user, game = game).exists():
-        object1 = GameData.objects.get(user = request.user, game = game)
-        if object1.highscore < int(highscore1): #only modify highscore if it is higher than old highscore
-            object1.highscore = highscore1
-            object1.save()
-        data = {
-            'saved': 'Gamestate saved'
-        }
-        return JsonResponse(data)
+    if request.is_ajax():
+        game = Game.objects.get(pk=game_id)
+        data = request.GET.get('game_state')
+        game_data = GameData.objects.get( user = request.user, game = game)
+        game_data.save_data = data
+        game_data.save()
+        return JsonResponse({})
+    
+    return HttpResponseNotFound()
+        
 
-    else:
-        a = GameData(user = request.user, game = game, highscore = highscore1, save_data = str(request.GET))
-        a.save()
-        data = {
-            'saved': 'Gamestate saved'
-        }
-        return JsonResponse(data)
+
+def load(request, game_id):
+    if request.is_ajax():
+        game = Game.objects.get(pk=game_id)
+        game_data = GameData.objects.get( user = request.user, game = game)
+        data = game_data.save_data
+        if data != None:
+            message = {'messageType': 'LOAD', 'gameState': data}
+        else:
+            message = {'messageType': 'ERROR', 'info': 'Gamestate could not be loaded.'}
+        return JsonResponse(message)
+    return HttpResponseNotFound()
+
+
+
+def submit_score(request, game_id):
+    if request.is_ajax():
+        game = Game.objects.get(pk=game_id)
+        game_data = GameData.objects.get( user = request.user, game = game)
+        incoming_score = int(request.GET.get('score'))
+        if incoming_score > game_data.highscore:
+            game_data.highscore = incoming_score
+            game_data.save()
+        return JsonResponse({})
+    return HttpResponseNotFound()
+
 
 
 @login_required
@@ -47,4 +60,10 @@ def play(request, game_id):
 
     game.times_played += 1
     game.save()
+
+    # Create new game data if first time playing
+    if not GameData.objects.filter( user = request.user, game = game).exists():
+        game_data = GameData.objects.create(user = request.user, game = game)
+        game_data.save()
+
     return render(request, 'play_game/play.html', {'game': game})

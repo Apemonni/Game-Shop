@@ -13,29 +13,44 @@
       //Note that messages from all origins are accepted
 
       //Get data from sent message
-      var data = JSON.parse(JSON.stringify(evt.originalEvent.data));
-      //Create a new list item based on the data
-      if (data.gameState.score != undefined)
-      {
-        if (data.messageType == "SAVE"){
-          $.ajax({
-            url: "{% url 'save' game.pk %}",
-            data: {
-              'save_message': data,
-              'highscore': data.gameState.score,
-              'items': data.gameState.playerItems
-            },
-            dataType: 'json',
-            success: function (data) {
-                alert(data.saved);
+      var data = evt.originalEvent.data;
+      if (data.messageType == "SAVE"){
+        $.ajax({
+          url: "{% url 'save' game.pk %}",
+          data: {
+            'game_state': JSON.stringify(data.gameState)
+          },
+          dataType: 'json'
+      });
+      }
+      else if (data.messageType == "LOAD_REQUEST"){
+        $.ajax({
+          url: "{% url 'load' game.pk %}",
+          dataType: 'json',
+          success: function (data) {
+            // A responser with LOAD and game state OR ERROR and info message is returned after load request
+            if(data.messageType == "LOAD") {
+              data.gameState = JSON.parse(data.gameState) // Convert gameState back to json format
+            }
+            $("#game_iframe")[0].contentWindow.postMessage(data, '*')
           }
-
-        });
-        }
-
-        var newItem = '\n\t<li>' + (data.gameState.score) + '</li>';
-        //Add the item to the beginning of the actions list
-        $('#actions').prepend(newItem);
+        })
+      }
+      else if(data.messageType == "SCORE"){
+        $.ajax({
+          url: "{% url 'submit-score' game.pk %}",
+          data: {
+            'score': data.score
+          },
+          dataType: 'json'
+        })
+      }
+      else if(data.messageType == "SETTING") {
+        //alert("received setting call: " + data.options.width + ", " + data.options.height)
+        $("#game_iframe")[0].setAttribute("width", data.options.width)
+        //document.getElementById("game_iframe").setAttribute("width", data.options.width)
+        $("#game_iframe")[0].setAttribute("height", data.options.height)
+        //document.getElementById("game_iframe").height() = data.options.height
       }
     });
   });
@@ -69,7 +84,7 @@
       <h2>PLAY VIEW</h2>
       <p>{{ game.name }}</p>
     </section>
-    <iframe id="encoder_iframe" src= '{{ game.source}}' width = 900px height = 300px></iframe>
+    <iframe id="game_iframe" src= '{{ game.source}}' width = 500px height = 500px></iframe>
     <ul id="actions">
     </ul>
   </div>
