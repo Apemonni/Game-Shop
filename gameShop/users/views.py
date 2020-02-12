@@ -24,6 +24,9 @@ def register(request, user_type):
         if form.is_valid():
 
             user = form.save()
+            # Set user as inactive before verification link is clicked
+            user.is_active = False
+            user.save()
             if is_dev:
                 profile = DevProfile.objects.create(user=user, is_dev=is_dev, seller_id=form.data['seller_id'], secret_key=form.data['secret_key'] )
             else:
