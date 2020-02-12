@@ -10,15 +10,9 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
+# Additional details needed for dev registration
 class DevRegisterForm(UserRegisterForm):
     seller_id = forms.CharField(max_length=255)
     secret_key = forms.CharField(max_length=255)
 
-'''
-class PlayerRegisterForm(UserRegisterForm):
-    nickName = forms.CharField()
 
-class DevRegisterForm(UserRegisterForm):
-    iban = forms.CharField()
-'''
-# Make different forms if different data needed for player/dev

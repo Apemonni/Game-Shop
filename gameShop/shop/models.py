@@ -31,3 +31,7 @@ class GamePurchase(models.Model):
     purchase_price = models.PositiveSmallIntegerField()
     purchase_id = models.CharField(max_length=64, unique=True)
     purchase_ref = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        username = self.user.username if self.user != None else "USER_UNDEFINED"
+        return self.game.name + " by, " + username

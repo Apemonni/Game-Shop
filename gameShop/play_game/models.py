@@ -9,3 +9,6 @@ class GameData(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     highscore = models.PositiveIntegerField(default=0)
     save_data = models.TextField(null=True)
+
+    def __str__(self):
+        return self.user.username + ", " + self.game.name

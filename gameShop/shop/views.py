@@ -12,6 +12,11 @@ from .models import Game, GamePurchase
 from users.models import Profile, DevProfile
 from play_game.models import GameData
 
+# Used in the buying process
+from hashlib import md5
+from urllib.parse import urlencode
+import time
+
 
 def home(request):
     return render(request, 'shop/index.html')
@@ -83,22 +88,18 @@ def buy_confirm(request, game_id):
 
     return render(request, 'shop/buy_game.html', {'game': game})
 
-# TODO: move imports to top
-from hashlib import md5
-from urllib.parse import urlencode
-import time
 
 @login_required
 def buy(request, game_id):
     user = request.user
-    game = Game.objects.get(pk=game_id)
+    game = get_object_or_404(Game, pk=game_id)
     dev_info = DevProfile.objects.get(user=game.author)
 
     pid = str(game.pk) + str(user.pk) + '_' + str(time.time())
     sid = dev_info.seller_id
     amount = game.price
     success_url = request.build_absolute_uri(reverse('buy-success', kwargs={'user_id': user.pk, 'game_id': game_id}))
-    cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id})) # 'http://localhost:8000/'
+    cancel_url = request.build_absolute_uri(reverse('game-detail', kwargs={'pk': game_id}))
     error_url = request.build_absolute_uri(reverse('buy-error'))
     secret = dev_info.secret_key
     # use older style string formatting for compatibility with Python version < 3.6
@@ -113,12 +114,13 @@ def buy(request, game_id):
     'success_url': success_url,
     'cancel_url': cancel_url,
     'error_url': error_url})
+
     return redirect(bankapi + '?' + query)
 
 
 @login_required
 def buy_success(request, user_id, game_id):
-    game = Game.objects.get(pk=game_id)
+    game = get_object_or_404(Game, pk=game_id)
     pid = request.GET.get('pid', None)
     ref = request.GET.get('ref', None)
     result = request.GET.get('result', None)
@@ -152,6 +154,6 @@ def buy_error(request):
 
 
 def highscores(request):
-    score = GameData.objects.order_by('highscore')[::-1]
+    score = GameData.objects.order_by('-highscore')
     games = Game.objects.all()
     return render(request, 'shop/highscores_details.html', {'score': score, 'games':games})

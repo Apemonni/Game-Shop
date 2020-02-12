@@ -52,7 +52,7 @@ def submit_score(request, game_id):
 
 @login_required
 def play(request, game_id):
-    game = Game.objects.get(pk=game_id)
+    game = get_object_or_404(Game, pk=game_id)
 
     # Only allow the game's author and users who have bought the game to play
     if request.user != game.author and request.user.purchases.filter(game=game).count() == 0:
@@ -63,7 +63,6 @@ def play(request, game_id):
 
     # Create new game data if first time playing
     if not GameData.objects.filter( user = request.user, game = game).exists():
-        game_data = GameData.objects.create(user = request.user, game = game)
-        game_data.save()
+        GameData.objects.create(user = request.user, game = game)
 
     return render(request, 'play_game/play.html', {'game': game})
