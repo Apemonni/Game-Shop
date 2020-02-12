@@ -1,88 +1,19 @@
-
-<!doctype html>
+{% extends "shop/base.html" %}
 {% load static %}
 
-
-<head>
+{% block content %}
+  <section id="game_header">
+    <h2>PLAY VIEW</h2>
+    <p>{{ game.name }}</p>
+  </section>
+  <iframe id="game_iframe" src= '{{ game.source }}' width = 500px height = 500px
+    save_url="{% url 'save' game.pk %}"
+    load_url="{% url 'load' game.pk %}"
+    score_url="{% url 'submit-score' game.pk %}"></iframe>
+{% endblock content %}
+    
+{% block scripts %}
   <script src="{% static 'play_game/jquery-3.2.1.min.js' %}"></script>
-  <script>
-  /* global $ */
-  $(document).ready(function() {
-    'use strict';
-    $(window).on('message', function(evt) {
-      //Note that messages from all origins are accepted
+  <script src="{% static 'play_game/communicate.js' %}"></script>
+{% endblock scripts %}
 
-      //Get data from sent message
-      var data = evt.originalEvent.data;
-      if (data.messageType == "SAVE"){
-        $.ajax({
-          url: "{% url 'save' game.pk %}",
-          data: {
-            'game_state': JSON.stringify(data.gameState)
-          },
-          dataType: 'json'
-      });
-      }
-      else if (data.messageType == "LOAD_REQUEST"){
-        $.ajax({
-          url: "{% url 'load' game.pk %}",
-          dataType: 'json',
-          success: function (data) {
-            // A responser with LOAD and game state OR ERROR and info message is returned after load request
-            if(data.messageType == "LOAD") {
-              data.gameState = JSON.parse(data.gameState) // Convert gameState back to json format
-            }
-            $("#game_iframe")[0].contentWindow.postMessage(data, '*')
-          }
-        })
-      }
-      else if(data.messageType == "SCORE"){
-        $.ajax({
-          url: "{% url 'submit-score' game.pk %}",
-          data: {
-            'score': data.score
-          },
-          dataType: 'json'
-        })
-      }
-      else if(data.messageType == "SETTING") {
-        //alert("received setting call: " + data.options.width + ", " + data.options.height)
-        $("#game_iframe")[0].setAttribute("width", data.options.width)
-        $("#game_iframe")[0].setAttribute("height", data.options.height)
-      }
-    });
-  });
-  </script>
-  <link rel="stylesheet" type="text/css" href="{% static 'shop/base_style.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'shop/highscores_style.css' %}">
-
-</head>
-
-
-
-  <header>
-    <div id="logo">MOST AWESOME GAMES</div>
-  </header>
-
-  <div class="menu">
-    <a href="{% url 'shop-home' %}">HOME</a>
-    <a href="{% url 'game-list' %}">GAMES</a>
-    <a href="{% url 'highscores' %}">TOP HIGHSCORES</a>
-    <div class="menu-log">
-      {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}">LOG OUT</a>
-      {% else %}
-        <a href="{% url 'login' %}">LOG IN</a>
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="body">
-    <section id="content1">
-      <h2>PLAY VIEW</h2>
-      <p>{{ game.name }}</p>
-    </section>
-    <iframe id="game_iframe" src= '{{ game.source}}' width = 500px height = 500px></iframe>
-    <ul id="actions">
-    </ul>
-  </div>
