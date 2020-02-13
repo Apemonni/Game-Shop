@@ -27,4 +27,5 @@ urlpatterns = [
     path('play/', include('play_game.urls')),
     path('activate/', include('users.urls')),
     path('', include('shop.urls')),
+    path('accounts/', include('allauth.urls')),
 ]
