@@ -3,6 +3,9 @@
 {% block extrainfo %}
     <h3>Name: {{ user.username }}</h3>
     <h3>Email: {{ user.email }}</h3>
+    {% if user.profile.is_dev %}
+        <h3>Manage your inventory <a href="{% url 'manage-games' %}">here</a>.</h3>
+    {% endif %}
 
-    <h2>Inventory:</h2>
+    <h2>Owned games:</h2>
 {% endblock extrainfo %}

@@ -23,6 +23,7 @@ def home(request):
 
 class GameListView(ListView):
     model = Game
+    ordering = ['-date_added']
     #template_name = '' # use if different than game_list.html
     #context_object_name = 'games' # name used in the template, default is 'object[_list]'
     #ordering = ['name'] # attribute(s) to order by, prepend with '-'sign to reverse
@@ -44,6 +45,19 @@ class MyProfileView(LoginRequiredMixin, GameListView):
         owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists() or game.author == user]
 
         return owned_games
+
+class ManageGamesView(LoginRequiredMixin, UserPassesTestMixin, GameListView):
+    template_name = "shop/my_games.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        inventory = [game for game in Game.objects.all() if game.author == user]
+
+        return inventory
+
+
+    def test_func(self):
+        return self.request.user.profile.is_dev == True
 
 
 class GameDetailView(DetailView):

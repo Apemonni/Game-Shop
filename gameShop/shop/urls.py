@@ -7,6 +7,7 @@ urlpatterns = [
     path('highscores/', views.highscores, name='highscores'),
     path('home/', views.home, name='shop-home'),
     path('profile/', views.MyProfileView.as_view(), name='profile'),
+    path('profile/manage_games/', views.ManageGamesView.as_view(), name='manage-games'),
     path('games/', views.GameListView.as_view(), name='game-list'),
     path('games/<int:pk>/', views.GameDetailView.as_view(), name='game-detail'),
     path('games/new/', views.GameCreateView.as_view(), name='game-create'),
