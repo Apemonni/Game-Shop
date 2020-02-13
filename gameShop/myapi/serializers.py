@@ -14,7 +14,7 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('name', 'description', 'source', 'times_played')
+        fields = ('name', 'description', 'price', 'source', 'times_played')
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -22,7 +22,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ('user', 'is_dev')
 
-'''class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email')'''
+        fields = ('username', 'email')
