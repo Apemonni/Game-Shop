@@ -42,7 +42,7 @@ class MyProfileView(LoginRequiredMixin, GameListView):
 
     def get_queryset(self):
         user = self.request.user
-        owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists() or game.author == user]
+        owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists()]
 
         return owned_games
 
