@@ -127,7 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-LOGIN_REDIRECT_URL = 'shop-home'
+LOGIN_REDIRECT_URL = 'shop-home' # Where to go after login succesful
 
 LOGIN_URL = 'login' # Where to go if login needed to access view
 
