@@ -27,4 +27,8 @@ urlpatterns = [
     path('play/', include('play_game.urls')),
     path('activate/', include('users.urls')),
     path('', include('shop.urls')),
+    path('api/', include('myapi.urls')),
+    #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+
 ]
