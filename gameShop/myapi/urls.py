@@ -3,10 +3,10 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'Gamedatas', views.GameDataViewSet)
-router.register(r'Games', views.GameViewSet)
-router.register(r'Profiles', views.ProfileViewSet)
-router.register(r'Users', views.UserViewSet)
+router.register(r'Gamedatas', views.GameDataViewSet, 'game_datas')
+router.register(r'Games', views.GameViewSet, 'games')
+router.register(r'Profiles', views.ProfileViewSet, 'profiles')
+router.register(r'Users', views.UserViewSet, 'users')
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [

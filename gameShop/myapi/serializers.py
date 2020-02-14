@@ -16,6 +16,15 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
         model = Game
         fields = ('name', 'description', 'price', 'source', 'times_played')
 
+    def create(self, validated_data, **kwargs):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        validated_data['author'] = user
+        validated_data['times_played'] = 0
+        return Game.objects.create(**validated_data)
+
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
