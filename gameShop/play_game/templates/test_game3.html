@@ -21,6 +21,7 @@
 </head>
 <body>
 <canvas width="400" height="400" id="game"></canvas>
+</body>
 <script>
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
@@ -135,15 +136,16 @@ function loop() {
 
 // listen to keyboard events to move the snake
 document.addEventListener('keydown', function(e) {
+  "use strict";
   // prevent snake from backtracking on itself by checking that it's
   // not already moving on the same axis (pressing left while moving
   // left won't do anything, and pressing right while moving left
   // shouldn't let you collide with your own body)
-  alert(e.keyCode);
+  // alert(e.keyCode);
   if (e.keyCode === 81){
     var msg = {
         "messageType": "SCORE",
-        "score": maxCells
+        "score": snake.maxCells
       };
       window.parent.postMessage(msg, "*");
     }
@@ -190,5 +192,4 @@ window.addEventListener("message", function(evt) {
 // start the game
 requestAnimationFrame(loop);
 </script>
-</body>
 </html>
