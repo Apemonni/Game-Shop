@@ -30,14 +30,13 @@
 
 </style>
 
-<div align="center">
-    <h2>Let's create an account! Are you a..</h2> <br><br><br><br><br>
-    <a class="bordered" id="bordered1" href="{% url 'register' 'player' %}" >PLAYER</a><br><br><br><br><br><br>
-    <a class="bordered" id="bordered1" href="{% url 'register' 'developer' %}">DEVELOPER</a>
-    <br><br><br><br><br><br><br><br>
-    <h2>You can also use your Gmail account for creating an account..</h2><br><br><br><br><br>
-    <a class="bordered" id="bordered2" href="{% provider_login_url "google" %}" >PLAYER</a><br><br><br><br><br><br>
-    <a class="bordered" id="bordered2" href="{% url 'register' 'developer' %}">DEVELOPER</a>
+<div style="text-align:center">
+    <h2>Let's create an account! Are you a..</h2><br><br><br><br>
+    <a class="bordered" id="bordered1" href="{% url 'register' 'player' %}" >PLAYER</a><br><br><br>
+    <h3>You can also use your Gmail account for creating player account..</h3><br><br><br>
+    <a class="bordered" id="bordered2" href="{% provider_login_url 'google' %}" >SIGN UP WITH GOOGLE</a><br><br><br><br>
+    <h2> Or a...</h2><br><br><br>
+    <a class="bordered" id="bordered1" href="{% url 'register' 'developer' %}">DEVELOPER</a><br><br>
 </div>
 
 
