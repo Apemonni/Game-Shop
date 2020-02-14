@@ -12,6 +12,21 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework import permissions
 from .permissions import IsAdminUserOrReadOnly, AdminReadOnly, ReadOnly
 
+class IsDevOrReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS or request.user.is_superuser:
+            return True
+        else:
+            try:
+                user = request.user
+                userobject = Profile.objects.get(user = user)
+                if userobject.is_dev:
+                    return True
+            except Exception:
+                return False
+        return False
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -25,16 +40,9 @@ class GameDataViewSet(viewsets.ModelViewSet):
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-    try:
-        user = self.request.user
-        userobject = Profile.objects.get(user = user)
-        #cheking wheter user is developper (or admin), if it is true user can add games to database through API
-        if userobject.is_dev:
-            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        else:
-            permission_classes = [IsAdminUserOrReadOnly]
-    except:
-        permission_classes = [IsAdminUserOrReadOnly] #read only acces only for players and anonymous users
+    permission_classes = [IsDevOrReadOnly]
+
+
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
