@@ -25,7 +25,7 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
         validated_data['times_played'] = 0
         return Game.objects.create(**validated_data)
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
