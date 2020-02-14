@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'play_game.apps.PlayGameConfig',
     'users.apps.UsersConfig',
     'shop.apps.ShopConfig',
+    'myapi.apps.MyapiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'myapi.apps.MyapiConfig',
     'rest_framework',
 ]
 

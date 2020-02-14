@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAdminUser, SAFE_METHODS
 
-#this classes were implemented to grant acceses
+#these classes were implemented to grant access
 
 class IsAdminUserOrReadOnly(IsAdminUser):
 
