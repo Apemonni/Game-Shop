@@ -31,7 +31,9 @@ class GameListView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists() or game.author == user]
+        owned_games = []
+        if user.is_authenticated:
+            owned_games = [game for game in Game.objects.all() if game.purchases.filter(user=user).exists() or game.author == user]
         context['owned_games'] = owned_games
 
         return context
