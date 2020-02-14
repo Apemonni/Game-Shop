@@ -16,6 +16,8 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
         model = Game
         fields = ('name', 'description', 'price', 'source', 'times_played')
 
+    #create function added to POST new games through API user field and times_played filled automaticly
+
     def create(self, validated_data, **kwargs):
         user = None
         request = self.context.get("request")
