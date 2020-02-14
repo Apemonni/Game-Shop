@@ -12,6 +12,9 @@ class Game(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='games')
     times_played = models.PositiveIntegerField(default=0)
 
+    def get_times_sold(self):
+        return GamePurchase.objects.filter(game=self).count()
+
     def __str__(self):
         return self.name
 

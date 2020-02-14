@@ -57,6 +57,12 @@ class ManageGamesView(LoginRequiredMixin, UserPassesTestMixin, GameListView):
 
         return inventory
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['best_selling'] = sorted(self.get_queryset(), key=lambda g: g.get_times_sold(), reverse=True)
+        return context
+
+
 
     def test_func(self):
         return self.request.user.profile.is_dev == True
