@@ -1,4 +1,10 @@
 ## See our final report [here](https://version.aalto.fi/gitlab/kaukias1/wsd-project-2019/blob/master/FinalReport.pdf)
+My responsibilities in this group project were:
+* Interaction between the games and gameshop service, for example saving and loading the game
+* Implementing model for game state which stored highscore and additional data of the game for different users
+* Implementing RESTful API to the webshop service
+* Implementing own game that was added to the webshop service
+* Contributing to the software architecture design and database design
 
 # Project Plan
 
